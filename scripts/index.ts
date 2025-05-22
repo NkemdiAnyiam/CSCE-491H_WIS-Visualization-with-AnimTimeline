@@ -49,11 +49,11 @@ const {enableForm: enableForm_TA, disableForm: disableForm_TA} = createForm_text
 // })
 // scroll.addRoadblocks('forward', 'activePhase', '90%', [() => wait(3000)]);
 
-const toggleSequence = webchalk.newSequence(
+const toggleSequence = webchalk.newSequence([
   // scroll,
   Exit(jobForm_multiInput, '~wipe', ['from-right'], { duration: 250 }),
   Entrance(jobForm_textarea, '~wipe', ['from-right'], { duration: 250 }),
-);
+]);
 
 function swapForm(e: MouseEvent) {
   const toggleButton = e.target as HTMLButtonElement;

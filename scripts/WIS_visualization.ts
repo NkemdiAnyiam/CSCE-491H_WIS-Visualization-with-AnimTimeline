@@ -7,7 +7,7 @@ import { Job } from './Job';
 // \[\s'std',\s(.*'~)(high|un-high)(.*')(.*)\s\]
 // (\s*)(\[ 'line)
 
-const animTimeline = webchalk.newTimeline({debugMode: true, timelineName: 'wis-viz'});
+const animTimeline = webchalk.newTimeline({debugMode: false, timelineName: 'wis-viz'});
 
 const {
   Entrance,
@@ -82,13 +82,13 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
     const animSequence = webchalk.newSequence({
       description: `Describe that we're about to move bars onto graph`,
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_placeBars, [textbox_placeBars, 'center', 'bottom'], [getJobBarEl(jobsUnsorted[0]), 'center', 'top']),
       ConnectorEntrance(connector_placeBars, '~trace', ['from-B']),
       Entrance(textbox_placeBars, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
   /****************************************************** */
@@ -98,22 +98,22 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
     const animSequence = webchalk.newSequence({
       description: 'Move job bars onto time graph in unsorted order',
     })
-    .addClips(
+    .addClips([
       ConnectorExit(connector_placeBars, '~trace', ['from-B'], {startsNextClipToo: true}),
-    );
+    ]);
     jobsUnsorted.forEach((job) => {
       const jobBarEl = getJobBarEl(job)!;
       // set up options for moving job bars to correct location
       const jobLetter = jobBarEl.dataset.jobletter;
       const startCell = document.querySelector(`.time-graph__row[data-jobletterunsorted="${jobLetter}"] .time-graph__cell--${jobBarEl.dataset.start}`) as HTMLElement;
-      animSequence.addClips(Motion(jobBarEl, '~move-to', [startCell]));
+      animSequence.addClips([Motion(jobBarEl, '~move-to', [startCell])]);
     });
-    animSequence.addClips(
+    animSequence.addClips([
       Exit(paragraph_placeBars_unorder, '~fade-out', [], {duration: 250}),
       Entrance(paragraph_placeBars_unorder2, '~fade-in', [], {duration: 250}),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -124,17 +124,17 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
     const animSequence = webchalk.newSequence({
       description: 'Move job bars back off of the time graph',
     })
-    .addClips(
+    .addClips([
       Exit(paragraph_placeBars_unorder2, '~fade-out', [], {duration: 250}),
       Entrance(paragraph_placeBars_order, '~fade-in', [], {duration: 250}),
-    );
+    ]);
     const jobBarsInitialArea = document.querySelector('.time-graph__job-bars') as HTMLElement;
     jobsUnsorted.forEach((job) => {
       const jobBarEl = getJobBarEl(job);
-      animSequence.addClips(Motion(jobBarEl, '~move-to', [jobBarsInitialArea], {startsNextClipToo: true}));
+      animSequence.addClips([Motion(jobBarEl, '~move-to', [jobBarsInitialArea], {startsNextClipToo: true})]);
     });
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -157,20 +157,20 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       const rowUnsortedLetter = row.querySelector('.time-graph__job-letter--unsorted');
       const rowSortedLetter = row.querySelector('.time-graph__job-letter--sorted');
       
-      animSequence.addClips(
+      animSequence.addClips([
         Motion(jobBarEl, '~move-to', [startCell]),
         Exit(rowUnsortedLetter, '~wipe', ['from-right'], {duration: 250, startsWithPrevious: true}),
         Entrance(rowSJNum, '~wipe', ['from-right'], {duration: 250, startsWithPrevious: true, delay: 250}),
         Entrance(rowSortedLetter, '~wipe', ['from-right'], {duration: 250, startsWithPrevious: true}),
-      );
+      ]);
     });
 
-    animSequence.addClips(
+    animSequence.addClips([
       Exit(paragraph_placeBars_order, '~fade-out', [], {duration: 250}),
       Entrance(paragraph_placeBars_ordered, '~fade-in', [], {duration: 250}),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -188,14 +188,14 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
     const animSequence = webchalk.newSequence({
       description: 'Explain what a compatible job is',
     })
-    .addClips(
+    .addClips([
       Exit(textbox_placeBars, '~fade-out', []),
       Entrance(jArray1, '~wipe', ['from-left']),
       Entrance(cArray, '~wipe', ['from-left']),
       Entrance(textbox_cArray, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -206,14 +206,14 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
     const animSequence = webchalk.newSequence({
       description: 'Explain what c array will be used for',
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_cArray, [textbox_cArray, 0, 0.5], [cArray, 1, 0.5]),
       ConnectorEntrance(connector_cArray, '~trace', ['from-B']),
       Exit(paragraph_cArray_explain, '~fade-out', [], {duration: 250}),
       Entrance(paragraph_cArray_refArray, '~fade-in', [], {duration: 250}),
-    );
+    ]);
     
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -225,12 +225,12 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: `Hide explanation of c array's purpose and continue into next phase`,
       autoplaysNextSequence: true, // after hiding, immediately continue into next phase
     })
-    .addClips(
+    .addClips([
       Exit(textbox_cArray, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_cArray, '~trace', ['from-A']),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -262,16 +262,16 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       const animSequence = webchalk.newSequence({
         description: 'Move cbar to current job bar, unhide it, and highlight current job bar and j array block',
       })
-      .addClips(
+      .addClips([
         Motion(cBar, '~move-to', [jobBarEl, {preserveY: true}], {duration: 0, commitsStyles: true}),
         Emphasis(jobBarEl, '~highlight', [], {startsNextClipToo: true}),
         Emphasis(jBlock, '~highlight', [], {startsNextClipToo: true}),
         Entrance(cBar, '~wipe', ['from-top']),
         Entrance(paragraph_fillCArray_forJobX, '~appear', []),
         Entrance(textbox_fillCArray, '~fade-in', []),
-      );
+      ]);
 
-      animTimeline.addSequences(animSequence);
+      animTimeline.addSequences([animSequence]);
     }
 
 
@@ -284,41 +284,41 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       if (compatibleJobBarEl) {
         row = document.querySelector(`.time-graph__row[data-joblettersorted="${compatibleJobBarEl.dataset.jobletter}"]`) as HTMLElement;
         rowSJNum = row.querySelector('.time-graph__SJ-num');
-        animSequence.addClips(
+        animSequence.addClips([
           Motion(cBar, '~move-to', [compatibleJobBarEl, {alignment: 'right top', preserveY: true}]),
           Emphasis(compatibleJobBarEl, '~highlight', []),
-        );
-        animSequence2.addClips(
+        ]);
+        animSequence2.addClips([
           ConnectorSetter(timeGraphArrowEl, [rowSJNum, 1, 0.5], [cBlock, 0.5, 0]),
           ConnectorEntrance(timeGraphArrowEl, '~trace', ['from-top']),
-        );
+        ]);
       }
       // If no compatible job exists, move cbar to left of time graph
       // Then point arrow from bottom of cbar to current c-array entry
       else {
-        animSequence.addClips(
+        animSequence.addClips([
           Motion(cBar, '~move-to', [timeGraphEl, {alignment: 'left top', preserveY: true}]),
-        );
-        animSequence2.addClips(
+        ]);
+        animSequence2.addClips([
           ConnectorSetter(timeGraphArrowEl, [cBar, 0, 1], [cBlock, 0.5, 0]),
           ConnectorEntrance(timeGraphArrowEl, '~trace', ['from-top']),
-        );
+        ]);
       }
 
-      animSequence.addClips(
+      animSequence.addClips([
         Exit(paragraph_fillCArray_forJobX, '~fade-out', [], {duration: 250}),
         Entrance(paragraph_fillCArray_resultJobX, '~fade-in', [], {duration: 250}),
-      );
+      ]);
     
       // "Update" current c-array entry
-      animSequence2.addClips(
+      animSequence2.addClips([
         Exit(cEntryBlank, '~wipe', ['from-right'], {startsNextClipToo: true}),
         Entrance(cEntryValue, '~wipe', ['from-right']),
         Exit(paragraph_fillCArray_resultJobX, '~fade-out', [], {duration: 250}),
         Entrance(paragraph_fillCArray_continueOn, '~fade-in', [], {duration: 250}),
-      );
+      ]);
     
-      animTimeline.addSequences(animSequence, animSequence2);
+      animTimeline.addSequences([animSequence, animSequence2]);
     }
 
 
@@ -329,22 +329,22 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
         autoplaysNextSequence: true,
       });
       if (compatibleJobBarEl) {
-        animSequence.addClips(
+        animSequence.addClips([
           Emphasis(compatibleJobBarEl, '~un-highlight', [], {startsNextClipToo: true}),
-        );
+        ]);
       }
-      animSequence.addClips(
+      animSequence.addClips([
         ConnectorExit(timeGraphArrowEl, '~trace', ['from-bottom'], {startsNextClipToo: true}),
-      );
-      animSequence.addClips(
+      ]);
+      animSequence.addClips([
         Exit(textbox_fillCArray, '~fade-out', [], {startsNextClipToo: true}),
         Exit(cBar, '~fade-out', [], {startsNextClipToo: true}),
         Emphasis(jobBarEl, '~un-highlight', [], {startsNextClipToo: true}),
         Emphasis(jBlock, '~un-highlight', []),
         Exit(paragraph_fillCArray_continueOn, '~disappear', []),
-      );
+      ]);
 
-      animTimeline.addSequences(animSequence);
+      animTimeline.addSequences([animSequence]);
     }
   });
 
@@ -362,11 +362,11 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'State that now we need to find the maximum weight',
       jumpTag: 'finished c array',
     })
-    .addClips(
+    .addClips([
       Entrance(textbox_finishedCArray, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -378,14 +378,14 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Explain naive approach to finding max weight',
       jumpTag: 'show naive',
     })
-    .addClips(
+    .addClips([
       Motion(textbox_showNaive, '~move-to', [textbox_finishedCArray, {targetOffset: '0% 100%', selfOffset: '0% 10rem'}], {duration: 0, commitsStyles: true}),
       ConnectorSetter(connector_showNaive, [textbox_finishedCArray, 0.5, 1], [textbox_showNaive, 0.5, 0]),
       ConnectorEntrance(connector_showNaive, '~trace', ['from-top']),
       Entrance(textbox_showNaive, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
   const textbox_explainNaive1 = dataDisplay.querySelector('.text-box-line-group--explain-naive-1 .text-box');
@@ -398,16 +398,16 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Explain possibility that job is part of optimal sequence',
       jumpTag: 'explain naive',
     })
-    .addClips(
+    .addClips([
       Motion(textbox_explainNaive1, '~move-to', [textbox_showNaive, {targetOffset: '-100% 100%', selfOffset: '10rem 10rem', alignment: 'left top'}],
         {duration: 0, commitsStyles: true}),
       Emphasis(algorithm_term1, '~highlight', []),
       ConnectorSetter(connector_explainNaive1, [algorithm_term1, 0.5, 1], [textbox_explainNaive1, 0.5, 0]),
       ConnectorEntrance(connector_explainNaive1, '~trace', ['from-top']),
       Entrance(textbox_explainNaive1, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
   const textbox_explainNaive2 = dataDisplay.querySelector('.text-box-line-group--explain-naive-2 .text-box');
@@ -420,16 +420,16 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Explain possibility that job is NOT part of optimal sequence',
       jumpTag: 'explain naive p2'
     })
-    .addClips(
+    .addClips([
       Motion(textbox_explainNaive2, '~move-to', [textbox_showNaive, {selfOffset: '-10rem 10rem', targetOffset: '100% 100%', alignment: 'right top'}],
         {duration: 0, commitsStyles: true}),
       Emphasis(algorithm_term2, '~highlight', []),
       ConnectorSetter(connector_explainNaive2, [algorithm_term2, 0.5, 1], [textbox_explainNaive2, 0.5, 0]),
       ConnectorEntrance(connector_explainNaive2, '~trace', ['from-top']),
       Entrance(textbox_explainNaive2, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
   /****************************************************** */
@@ -440,16 +440,16 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Hide naive approach explanations',
       autoplaysNextSequence: true,
     })
-    .addClips(
+    .addClips([
       Exit(textbox_explainNaive1, '~fade-out', [], {startsNextClipToo: true}),
       Exit(textbox_explainNaive2, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_explainNaive1, '~trace', ['from-bottom'], {startsNextClipToo: true}),
       ConnectorExit(connector_explainNaive2, '~trace', ['from-bottom'], {startsNextClipToo: true}),
       Emphasis(algorithm_term1, '~un-highlight', [], {startsNextClipToo: true}),
       Emphasis(algorithm_term2, '~un-highlight', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -463,15 +463,15 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Explain why naive approach is bad',
       jumpTag: 'explain naive bad',
     })
-    .addClips(
+    .addClips([
       Motion(textbox_explainNaiveBad, '~move-to', [textbox_showNaive, {targetOffset: '0% 100%', selfOffset: '0rem 10rem'}],
         {duration: 0, commitsStyles: true}),
       ConnectorSetter(connector_explainNaiveBad, [textbox_showNaive, 0.5, 1], [textbox_explainNaiveBad, 0.5, 0]),
       ConnectorEntrance(connector_explainNaiveBad, '~trace', ['from-top']),
       Entrance(textbox_explainNaiveBad, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -484,11 +484,11 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Collapse text boxes about the naive approach',
       autoplaysNextSequence: true,
     })
-    .addClips(
+    .addClips([
       Exit(naiveAlgorithmText, '~fade-out', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
   const arrayGroup_j_M = dataDisplay.querySelector('.array-group--j-and-M') as HTMLElement;
@@ -506,13 +506,13 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Explain memoization',
       jumpTag: 'introduce memoization',
     })
-    .addClips(
+    .addClips([
       Entrance(jArray2, '~wipe', ['from-left']),
       Entrance(MArray, '~wipe', ['from-left']),
       Entrance(textbox_MArray, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
   const arrayBlock_M_0 = MArray.querySelector('.array__array-block--0') as HTMLElement;
@@ -525,16 +525,16 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
     const animSequence = webchalk.newSequence({
       description: 'Explain what M array will be used for',
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_MArray, [textbox_MArray, 0, 0.5], [MArray, 1, 0.5]),
       ConnectorEntrance(connector_MArray, '~trace', ['from-B']),
       Exit( paragraph_MArray_explain, '~fade-out', [], {duration: 250}),
       Entrance( paragraph_MArray_refArray, '~fade-in', [], {duration: 250}),
       Exit(arrayBlank_M_0, '~fade-out', []),
       Entrance(arrayValue_M_0, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -547,15 +547,15 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
     const animSequence = webchalk.newSequence({
       description: 'Show memoized algorithm',
     })
-    .addClips(
+    .addClips([
       Motion(textbox_showMemoized, '~move-to', [textbox_MArray, {targetOffset: '100% 0%', selfOffset: '6.25rem 0rem', preserveY: true}],
         {duration: 0, commitsStyles: true}),
       ConnectorSetter(connector_showMemoized, [textbox_MArray, 1, 0.5], [textbox_showMemoized, 0, 0.5]),
       ConnectorEntrance(connector_showMemoized, '~trace', ['from-A']),
       Entrance( textbox_showMemoized, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -569,12 +569,12 @@ function animateDataDisplay(dataDisplay: HTMLElement, jobScheduler: JobScheduler
       description: 'Hide M array text explanation boxes',
       // autoplaysNextSequence: true,
     })
-    .addClips(
+    .addClips([
       Exit(MArrayTextBoxes, '~fade-out', []),
       Entrance(dataDisplayBorder, '~wipe', ['from-top']),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 };
 
@@ -672,29 +672,29 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     });
     if (parentArrowDown && parentArrowSource && aboveBullet) {
       const connector_bulletConnector = jobCard.querySelector('.connector--bullet-connector') as WebChalkTypes.WebChalkConnectorElement;
-      animSequence.addClips(
+      animSequence.addClips([
         Entrance(jobCard, '~fade-in', [], {startsNextClipToo: true}),
         ConnectorSetter(parentArrowDown, [parentArrowSource, 0, 1], [SJNumLabel, 0.5, -0.2]),
         ConnectorEntrance(parentArrowDown, '~trace', ['from-A'], {startsNextClipToo: true}),
         Scroller(document.documentElement, '~scroll-self', [jobCardContent, {targetOffset: [0, 0.5], scrollableOffset: [0, 0.5], preserveX: true}], {startsNextClipToo: true}),
         ConnectorSetter(connector_bulletConnector, [aboveBullet, 0.5, 0.5], [jobCardBullet, 0.5, 0.5]),
         ConnectorEntrance(connector_bulletConnector, '~trace', ['from-A'], {startsWithPrevious: true}),
-      );
+      ]);
     }
     else {
-      animSequence.addClips(
+      animSequence.addClips([
         Entrance(jobCard, '~fade-in', []),
-      );
+      ]);
     }
-    animSequence.addClips(
+    animSequence.addClips([
       Entrance(MAccess, '~fade-in', []),
       Emphasis(MAccessContainer, '~highlight', [], {startsNextClipToo: true}),
       ConnectorSetter(connector_MAccess, [MAccess, 0.5, -0.2], [textbox_MAccess, 0.5, 1]),
       ConnectorEntrance(connector_MAccess, '~trace', ['from-A']),
       Entrance(textbox_MAccess, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -705,12 +705,12 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Point to M block array entry',
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_toMBlock, [MAccessContainer, 0, 0.5], [MBlock, 0.9, 0.5], {pointTrackingEnabled: true}),
       ConnectorEntrance(connector_toMBlock, '~trace', ['from-A']),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -721,7 +721,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Focus on formula container',
     })
-    .addClips(
+    .addClips([
       ConnectorExit(connector_toMBlock, '~trace', ['from-B']),
       Exit(textbox_MAccess, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_MAccess, '~trace', ['from-B'], {startsNextClipToo: true}),
@@ -733,9 +733,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_formulaComputation, [formulaComputation, 0.1, 0.2], [textbox_formulaComputation, 0.5, 1]),
       ConnectorEntrance(connector_formulaComputation, '~trace', ['from-A']),
       Entrance(textbox_formulaComputation, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -746,7 +746,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Focus on computation 1',
     })
-    .addClips(
+    .addClips([
       Exit(textbox_formulaComputation, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_formulaComputation, '~trace', ['from-B'], {startsNextClipToo: true}),
       Emphasis(formulaComputation, '~un-highlight', []),
@@ -755,9 +755,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_computation1, [computation1, 0.5, -0.2], [textbox_computation1, 0.5, 1]),
       ConnectorEntrance(connector_computation1, '~trace', ['from-A']),
       Entrance(textbox_computation1, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -768,7 +768,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Focus on c access',
     })
-    .addClips(
+    .addClips([
       Exit(textbox_computation1, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_computation1, '~trace', ['from-B'], {startsNextClipToo: true}),
       Emphasis(computationExpression1, '~un-highlight', [], {startsNextClipToo: true}),
@@ -777,9 +777,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_cAccess, [cAccessContainer, 0.5, -0.2], [textbox_cAccess, 0.5, 1], {pointTrackingEnabled: true}),
       ConnectorEntrance(connector_cAccess, '~trace', ['from-A']),
       Entrance(textbox_cAccess, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -790,12 +790,12 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Point to c array entry',
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_toCBlock, [cAccessContainer, 0, 0.5], [cBlock, 0.9, 0.5], {pointTrackingEnabled: true}),
       ConnectorEntrance(connector_toCBlock, '~trace', ['from-A']),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -806,7 +806,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Reverse arrow and replace c access with value',
     })
-    .addClips(
+    .addClips([
       ConnectorExit(connector_toCBlock, '~fade-out', []),
       ConnectorSetter(connector_toCBlock, [cBlock, 0.9, 0.5], [cAccessContainer, 0, 0.5], {pointTrackingEnabled: true}),
       ConnectorEntrance(connector_toCBlock, '~trace', ['from-A']),
@@ -817,9 +817,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       // DrawConnector(connector_cAccess, '~fade-in', [], {duration: 0}),
       Exit(paragraph_cAccess_find, '~fade-out', [], { duration: 250 }),
       Entrance(paragraph_cAccess_found, '~fade-in', [], { duration: 250 }),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -830,7 +830,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Focus on OPT expression 1 as a whole',
     })
-    .addClips(
+    .addClips([
       // hide arrow for c block
       ConnectorExit(connector_toCBlock, '~fade-out', []),
   
@@ -844,9 +844,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_OPTExpression1, [OPTExpressionContainer1, 0.5, -0.2], [textbox_OPTExpression1, 0.5, 1]),
       ConnectorEntrance(connector_OPTExpression1, '~trace', ['from-A']),
       Entrance(textbox_OPTExpression1, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
   /****************************************************** */
@@ -858,11 +858,11 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
   {
     const animSeqPassDown = webchalk.newSequence({autoplaysNextSequence: true});
     // add blocks to hide text about OPT expression before recursion
-    animSeqPassDown.addClips(
+    animSeqPassDown.addClips([
       Exit(textbox_OPTExpression1, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_OPTExpression1, '~trace', ['from-B']),
-    );
-    animTimeline.addSequences(animSeqPassDown);
+    ]);
+    animTimeline.addSequences([animSeqPassDown]);
     // generate animation sequences for first child job/stub
     jobCardChild1.classList.contains('job-card--stub') ?
       animateJobStub(jobCardChild1, connector_downTree, OPTExpressionContainer1, jobCardBullet) :
@@ -874,7 +874,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       description: 'Replace OPT1 expression with answer, change text box text',
       jumpTag: 'OPT point 1',
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_upFromChild1, [MAccessContainer_fromChild1, 0.5, -0.2], [OPTExpressionContainer1, 0, 1.1]),
       ConnectorEntrance(connector_upFromChild1, '~trace', ['from-A']),
       Scroller(document.querySelector('html'), '~scroll-self', [jobCardContent, {targetOffset: [0, 0.5], scrollableOffset: [0, 0.5], preserveX: true}], {startsWithPrevious: true}),
@@ -885,9 +885,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_OPTExpression1, [OPTResult1, 0.5, -0.2], [textbox_OPTExpression1, 0.5, 1]),
       ConnectorEntrance(connector_OPTExpression1, '~trace', ['from-A']),
       Entrance(textbox_OPTExpression1, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
   
 
@@ -898,7 +898,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: `Remove arrow coming from child, hide current text, replace computation expression with answer, and focus on whole computation1 (swap text as well)`,
     })
-    .addClips(
+    .addClips([
       ConnectorExit(connector_upFromChild1, '~fade-out', [], {startsNextClipToo: true}),
       Exit(textbox_OPTExpression1, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_OPTExpression1, '~trace', ['from-B'], {startsNextClipToo: true}),
@@ -912,9 +912,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_computation1, [computationResult1, 0.5, -0.2], [textbox_computation1, 0.5, 1]),
       ConnectorEntrance(connector_computation1, '~trace', ['from-A']),
       Entrance(textbox_computation1, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -926,7 +926,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       description: 'Focus on computation 2',
       jumpTag: 'focus comp 2',
     })
-    .addClips(
+    .addClips([
       Exit(textbox_computation1, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_computation1, '~trace', ['from-B'], {startsNextClipToo: true}),
       Emphasis(computationResult1, '~un-highlight', []),
@@ -935,9 +935,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_computation2, [computation2, 0.5, -0.2], [textbox_computation2, 0.5, 1]),
       ConnectorEntrance(connector_computation2, '~trace', ['from-A']),
       Entrance(textbox_computation2, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -948,7 +948,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Replace subtraction with result; then focus on OPT expression 2'
     })
-    .addClips(
+    .addClips([
       Exit(textbox_computation2, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_computation2, '~trace', ['from-B'], {startsNextClipToo: true}),
   
@@ -958,9 +958,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_OPTExpression2, [computation2, 0.5, -0.2], [textbox_OPTExpression2, 0.5, 1]),
       ConnectorEntrance(connector_OPTExpression2, '~trace', ['from-A']),
       Entrance(textbox_OPTExpression2, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -974,11 +974,11 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSeqPassDown = webchalk.newSequence({
       autoplaysNextSequence: true,
     })
-    .addClips(
+    .addClips([
       Exit(textbox_OPTExpression2, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_OPTExpression2, '~trace', ['from-B']),
-    );
-    animTimeline.addSequences(animSeqPassDown);
+    ]);
+    animTimeline.addSequences([animSeqPassDown]);
     // create animation sequences for second child card/stub
     jobCardChild2.classList.contains('job-card--stub') ?
       animateJobStub(jobCardChild2, connector_downTree, OPTExpression2, jobCardChild1.querySelector('.job-card-bullet') as HTMLElement) :
@@ -989,7 +989,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Replace OPT2 expression with answer, hide old text, and add computation 2 text with swapped text',
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_upFromChild2, [MAccessContainer_fromChild2, 0.5, -0.2], [computation2, 0, 1.1]),
       ConnectorEntrance(connector_upFromChild2, '~trace', ['from-A']),
       Scroller(document.querySelector('html'), '~scroll-self', [jobCardContent, {targetOffset: [0, 0.5], scrollableOffset: [0, 0.5], preserveX: true}], {startsWithPrevious: true}),
@@ -1005,9 +1005,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_computation2, [computation2, 0.5, -0.2], [textbox_computation2, 0.5, 1]),
       ConnectorEntrance(connector_computation2, '~trace', ['from-A']),
       Entrance(textbox_computation2, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
   
 
@@ -1018,7 +1018,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Focus on whole formula container',
     })
-    .addClips(
+    .addClips([
       ConnectorExit(connector_upFromChild2, '~fade-out', []),
       Exit(textbox_computation2, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_computation2, '~trace', ['from-B'], {startsNextClipToo: true}),
@@ -1031,9 +1031,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_formulaComputation, [formulaContainer, 0.5, 0], [textbox_formulaComputation, 0.5, 1], {pointTrackingEnabled: true}),
       ConnectorEntrance(connector_formulaComputation, '~trace', ['from-A']),
       Entrance(textbox_formulaComputation, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -1045,15 +1045,15 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       description: 'Replace formula container contents with final answer',
       jumpTag: 'replace formula container contents',
     })
-    .addClips(
+    .addClips([
       Exit(formulaComputation, '~wipe', ['from-right']),
       Entrance(formulaResult, '~wipe', ['from-right'], {startsNextClipToo: true}),
   
       Exit(paragraph_formulaComputation_max, '~fade-out', [], { duration: 250 }),
       Entrance(paragraph_formulaComputation_found, '~fade-in', [], { duration: 250 }),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -1065,7 +1065,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       description: 'Show only M container, replace M access with final computed optimal value, and update M array block',
       jumpTag: 'found max',
     })
-    .addClips(
+    .addClips([
       // hide formula container
       Exit(textbox_formulaComputation, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_formulaComputation, '~trace', ['from-B'], {startsNextClipToo: true}),
@@ -1083,9 +1083,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorEntrance(connector_toMBlock, '~trace', ['from-right']),
       Exit(MBlock_blank, '~fade-out', []),
       Entrance(MBlock_value, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -1096,7 +1096,7 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
     const animSequence = webchalk.newSequence({
       description: 'Remove arrow pointing from M block and show final text box',
     })
-    .addClips(
+    .addClips([
       // Add last text box
       Exit(paragraph_MAccess_intro, '~disappear', []),
       Entrance(paragraph_MAccess_solved, '~appear', []),
@@ -1104,9 +1104,9 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       ConnectorSetter(connector_MAccess, [MAccessContainer, 0.5, -0.2], [textbox_MAccess, 0.5, 1], {pointTrackingEnabled: true}),
       ConnectorEntrance(connector_MAccess, '~trace', ['from-A']),
       Entrance(textbox_MAccess, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -1120,14 +1120,14 @@ function animateJobCard(jobCard: HTMLElement, parentArrowDown?: WebChalkTypes.We
       jumpTag: 'finish a main card',
       autoplaysNextSequence: true,
     })
-    .addClips(
+    .addClips([
       Exit(textbox_MAccess, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_MAccess, '~trace', ['from-B']),
       ConnectorExit(parentArrowDown, '~fade-out', [], {startsNextClipToo: true}),
       Emphasis(MAccessContainer, '~un-highlight', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 };
 
@@ -1162,7 +1162,7 @@ function animateJobStub(jobCard: HTMLElement, parentArrowDown: WebChalkTypes.Web
     const animSequence = webchalk.newSequence({
       description: 'Fade in job stub and M access',
     })
-    .addClips(
+    .addClips([
       Entrance(jobCard, '~fade-in', [], {startsNextClipToo: true}),
       ConnectorSetter(connector_bulletConnector, [aboveBullet, 0.5, 0.5], [jobCardBullet, 0.5, 0.5]),
       ConnectorEntrance(connector_bulletConnector, '~trace', ['from-A'], {startsNextClipToo: true}),
@@ -1174,9 +1174,9 @@ function animateJobStub(jobCard: HTMLElement, parentArrowDown: WebChalkTypes.Web
       ConnectorSetter(connector_MAccess, [MAccessContainer, 0.5, -0.2], [textbox_MAccess, 0.5, 1]),
       ConnectorEntrance(connector_MAccess, '~trace', ['from-A']),
       Entrance(textbox_MAccess, '~fade-in', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -1187,12 +1187,12 @@ function animateJobStub(jobCard: HTMLElement, parentArrowDown: WebChalkTypes.Web
     const animSequence = webchalk.newSequence({
       description: 'Point to M block array entry',
     })
-    .addClips(
+    .addClips([
       ConnectorSetter(connector_toMBlock, [MAccessContainer, 0, 0.5], [MBlock, 0.9, 0.5], {pointTrackingEnabled: true}),
       ConnectorEntrance(connector_toMBlock, '~trace', ['from-A']),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
   
 
@@ -1203,7 +1203,7 @@ function animateJobStub(jobCard: HTMLElement, parentArrowDown: WebChalkTypes.Web
     const animSequence = webchalk.newSequence({
       description: 'Point back to M access from M block',
     })
-    .addClips(
+    .addClips([
       ConnectorExit(connector_toMBlock, '~fade-out', []),
       ConnectorSetter(connector_toMBlock, [MBlock, 0.9, 0.5], [MAccessContainer, 0, 0.5]),
       ConnectorEntrance(connector_toMBlock, '~trace', ['from-A']),
@@ -1211,9 +1211,9 @@ function animateJobStub(jobCard: HTMLElement, parentArrowDown: WebChalkTypes.Web
       Entrance(MEntry, '~wipe', ['from-right']),
       Exit(textbox_MAccess_p1, '~fade-out', [], {duration: 250, startsNextClipToo: true}),
       Entrance(textbox_MAccess_p2, '~fade-in', [], {duration: 250, startsNextClipToo: true, delay: 250}),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 
 
@@ -1225,15 +1225,15 @@ function animateJobStub(jobCard: HTMLElement, parentArrowDown: WebChalkTypes.Web
       description: 'Hide parent arrow and unhighlight M access',
       autoplaysNextSequence: true,
     })
-    .addClips(
+    .addClips([
       ConnectorExit(connector_toMBlock, '~fade-out', [], {startsNextClipToo: true}),
       ConnectorExit(connector_MAccess, '~trace', ['from-B'], {startsNextClipToo: true}),
       Exit(textbox_MAccess, '~fade-out', []),
       ConnectorExit(parentArrowDown, '~fade-out', [], {startsNextClipToo: true}),
       Emphasis(MAccessContainer, '~un-highlight', []),
-    );
+    ]);
 
-    animTimeline.addSequences(animSequence);
+    animTimeline.addSequences([animSequence]);
   }
 };
 
@@ -1250,7 +1250,22 @@ function animateJobStub(jobCard: HTMLElement, parentArrowDown: WebChalkTypes.Web
 //   animTimeline.togglePause();
 //   animTimeline.toggleSkipping();
 //   await wait(500);
-//   animTimeline.jumpToPosition('end', {targetOffset: 0});
+
+//   console.time('JUMPING');
+//   await animTimeline.jumpToPosition('end', {targetOffset: 0});
+//   console.timeEnd('JUMPING');
+//   await wait(500);
+//   console.time('JUMPING-2');
+//   await animTimeline.jumpToPosition('beginning', {targetOffset: 0});
+//   console.timeEnd('JUMPING-2');
+//   await wait(500);
+//   console.time('JUMPING');
+//   await animTimeline.jumpToPosition('end', {targetOffset: 0});
+//   console.timeEnd('JUMPING');
+//   await wait(500);
+//   console.time('JUMPING-2');
+//   await animTimeline.jumpToPosition('beginning', {targetOffset: 0});
+//   console.timeEnd('JUMPING-2');
 // })
 
 
