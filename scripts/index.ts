@@ -35,19 +35,34 @@ const {enableForm: enableForm_TA, disableForm: disableForm_TA} = createForm_text
 
 // const scroll = Scroller(document.querySelector('.aaa'), '~scroll-self', [document.querySelector('.chill')!, {scrollableOffset: [0.5, 1], targetOffset: [0.5, 1]}], {duration: 1000});
 // scroll.generateTimePromise('forward', 'activePhase', '50%').then(() => {
+//   console.log('pause scroll for 2');
 //   scroll.pause();
 //   wait(2000).then(() => {
+//     console.log('unpause scroll');
 //     scroll.unpause();
 //   });
 // });
-// scroll.play().then(() => {
-//   scroll.rewind();
-//   scroll.finish(); // should do nothing
+
+// let taskId: string;
+// scroll.play().then(async () => {
+//   await scroll.rewind();
+//   await scroll.play();
+//   await scroll.rewind();
+//   console.log(scroll.unscheduleTask(taskId));
+//   await scroll.play();
+//   await scroll.rewind();
+//   scroll.play();
+//   await scroll.finish();
 // });
+
 // scroll.generateTimePromise('forward', 'activePhase', '50%').then(() => {
 //   scroll.finish(); // should finish it
 // })
-// scroll.addRoadblocks('forward', 'activePhase', '90%', [() => wait(3000)]);
+// let num = 3;
+// scroll.scheduleTask('delayPhase', '100%', { onRewind: () => wait(1000) } );
+// taskId = scroll.scheduleTask('activePhase', 'beginning', {onPlay: () => {console.log(num);}, onRewind: () => {console.log(num)}});
+// scroll.scheduleTask('activePhase', 'end', { onPlay: () => num *= 2, onRewind: () => num /= 2 } );
+// scroll.scheduleTask('activePhase', 'end', { onPlay: () => num += 1, onRewind: () => num -= 1 } );
 
 const toggleSequence = webchalk.newSequence([
   // scroll,
